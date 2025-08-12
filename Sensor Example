@@ -1,0 +1,29 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@TeleOp(name="Sensor Example", group="Examples")
+public class SensorExample extends LinearOpMode {
+
+    private RevColorSensorV3 colorSensor;
+    private TouchSensor touchSensor;
+
+    @Override
+    public void runOpMode() {
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+            telemetry.addData("Red", colorSensor.red());
+            telemetry.addData("Green", colorSensor.green());
+            telemetry.addData("Blue", colorSensor.blue());
+            telemetry.addData("Touch Pressed", touchSensor.isPressed());
+            telemetry.update();
+        }
+    }
+}
