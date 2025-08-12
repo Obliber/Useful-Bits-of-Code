@@ -1,0 +1,49 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@Autonomous(name="Encoder Move", group="Examples")
+public class EncoderMove extends LinearOpMode {
+
+    private DcMotor leftMotor, rightMotor;
+    static final int TARGET_TICKS = 2000; // target encoder counts
+
+    @Override
+    public void runOpMode() {
+        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+        rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
+
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        // Reset encoders
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        // Set target positions
+        leftMotor.setTargetPosition(TARGET_TICKS);
+        rightMotor.setTargetPosition(TARGET_TICKS);
+
+        // Set to RUN_TO_POSITION
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        waitForStart();
+
+        // Set motor power
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(0.5);
+
+        // Wait until both motors reach target
+        while (opModeIsActive() && (leftMotor.isBusy() || rightMotor.isBusy())) {
+            telemetry.addData("Left Pos", leftMotor.getCurrentPosition());
+            telemetry.addData("Right Pos", rightMotor.getCurrentPosition());
+            telemetry.update();
+        }
+
+        // Stop motors
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+    }
+}
