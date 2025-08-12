@@ -1,0 +1,35 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@Autonomous(name="Time Move", group="Examples")
+public class TimeMove extends LinearOpMode {
+
+    private DcMotor leftMotor, rightMotor;
+
+    @Override
+    public void runOpMode() {
+        // Map motors from configuration
+        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+        rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
+
+        // Reverse one motor so both drive forward with same power
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        // Wait for the game to start
+        waitForStart();
+
+        // Turn on both motors at 100% power
+        leftMotor.setPower(1.0);
+        rightMotor.setPower(1.0);
+
+        // Run forward for 3 seconds
+        sleep(3000);
+
+        // Stop motors
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+    }
+}
