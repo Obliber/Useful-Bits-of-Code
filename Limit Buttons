@@ -1,0 +1,87 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Touch Sensor Test", group = "Test")
+public class touchSensorTest extends OpMode {
+
+    private DcMotor motor;
+    private TouchSensor limit1;
+    private TouchSensor limit2;
+    private boolean isReversed = false;
+    private boolean isMotorActive = false;
+
+    @Override
+    public void init() {
+        // Initialize hardware
+        motor = hardwareMap.get(DcMotor.class, "motor");
+        limit1 = hardwareMap.get(TouchSensor.class, "limit1");
+        limit2 = hardwareMap.get(TouchSensor.class, "limit2");
+
+        // Stop the motor by default
+        motor.setPower(0);
+    }
+
+    @Override
+    public void loop() {
+        // Check the state of the touch sensors
+        boolean isLimit1Pressed = limit1.isPressed();
+        boolean isLimit2Pressed = limit2.isPressed();
+
+        // Check gamepad input to toggle motor activity
+        if (gamepad1.a) {
+            isMotorActive = gamepad1.a;
+        } else {
+            isMotorActive = false;
+        }
+
+        if (isMotorActive) {
+            if (isLimit1Pressed && !isReversed) {
+                // Stop the motor and reverse direction
+                motor.setPower(0);
+            }
+            if (isLimit1Pressed && isReversed) {
+                motor.setPower(-0.1);
+            }
+            if (isLimit2Pressed && !isReversed) {
+                motor.setPower(0.1);
+            }
+            if (isLimit2Pressed && isReversed) {
+                // Stop the motor and reverse direction
+                motor.setPower(0);
+            }
+
+            if (!isLimit1Pressed && !isLimit2Pressed) {
+                // Move in the current direction
+                motor.setPower(isReversed ? -0.1 : 0.1);
+            }
+        } else {
+            // Stop the motor if inactive
+            if (isLimit1Pressed && !isReversed) {
+                // Stop the motor and reverse direction
+                isReversed = true;
+            }
+            if (isLimit2Pressed && isReversed) {
+                // Stop the motor and reverse direction
+                isReversed = false;
+            }
+            motor.setPower(0);
+        }
+
+        // Update telemetry for debugging
+        telemetry.addData("Limit1 Pressed", isLimit1Pressed);
+        telemetry.addData("Limit2 Pressed", isLimit2Pressed);
+        telemetry.addData("Motor Power", motor.getPower());
+        telemetry.addData("Direction Reversed", isReversed);
+        telemetry.addData("Motor Active", isMotorActive);
+        telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        // Ensure the motor stops when the OpMode is stopped
+        motor.setPower(0);
+    }
+}
