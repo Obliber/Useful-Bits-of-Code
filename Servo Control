@@ -1,0 +1,32 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp(name="Servo Control", group="Examples")
+public class ServoControl extends LinearOpMode {
+
+    private Servo servoA;
+
+    @Override
+    public void runOpMode() {
+        servoA = hardwareMap.get(Servo.class, "servoA");
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+            // Press A to move servo to position 0.2
+            if (gamepad1.a) {
+                servoA.setPosition(0.2);
+            }
+            // Press B to move servo back to position 0.0
+            else if (gamepad1.b) {
+                servoA.setPosition(0.0);
+            }
+
+            telemetry.addData("Servo Position", servoA.getPosition());
+            telemetry.update();
+        }
+    }
+}
