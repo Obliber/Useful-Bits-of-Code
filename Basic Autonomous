@@ -1,0 +1,46 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+/**
+ * Basic Autonomous Template
+ * Use this as a starting point for building custom autonomous programs.
+ */
+@Autonomous(name="Basic Autonomous Template", group="Templates")
+public class BasicAutonomous extends LinearOpMode {
+
+    // Declare hardware
+    private DcMotor leftMotor, rightMotor;
+
+    @Override
+    public void runOpMode() {
+        // Map motors (must match names in robot configuration)
+        leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
+        rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
+
+        // Reverse one motor so both move forward with the same power
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        // Send init status to Driver Station
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // Wait for driver to press PLAY
+        waitForStart();
+
+        // Example movement: drive forward for 1 second
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(0.5);
+        sleep(1000);
+
+        // Stop motors
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+
+        // End of program
+        telemetry.addData("Status", "Autonomous Complete");
+        telemetry.update();
+    }
+}
