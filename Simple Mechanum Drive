@@ -1,0 +1,57 @@
+package org.firstinspires.ftc.teamcode;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad2;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp
+public class SimpleMechanumDrive extends OpMode{
+        private DcMotor frontLeftMotor;
+        private DcMotor frontRightMotor;
+        private DcMotor backLeftMotor;
+        private DcMotor backRightMotor;
+        
+        private DcMotor.ZeroPowerBehavior BRAKE;
+        private DcMotor.RunMode RUN_TO_POSITION;
+        private DcMotor.RunMode STOP_AND_RESET_ENCODER;
+        private DcMotor.RunMode RUN_USING_ENCODER;
+@Override
+        public void init() {
+            frontLeftMotor = hardwareMap.dcMotor.get("front_left_motor");
+            frontRightMotor = hardwareMap.dcMotor.get("front_right_motor");
+            backLeftMotor = hardwareMap.dcMotor.get("back_left_motor");
+            backRightMotor = hardwareMap.dcMotor.get("back_right_motor");
+
+            frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+            frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
+            backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+            backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        }
+@Override
+        public void loop() {
+
+            double speed = 1;
+            double forward = gamepad1.left_stick_y;
+            double turn = gamepad1.left_stick_x;
+            double strafe = gamepad1.right_stick_x;
+
+            double frontRightPower = (forward + strafe + turn);
+            double frontLeftPower = (forward - strafe - turn);
+            double backLeftPower = (-forward - strafe + turn);
+            double backRightPower = (forward - strafe + turn);
+
+            frontRightPower *= speed;
+            frontLeftPower *= speed;
+            backLeftPower *= speed;
+            backRightPower *= speed;
+
+            frontRightMotor.setPower(frontRightPower);
+            frontLeftMotor.setPower(frontLeftPower);
+            backLeftMotor.setPower(backLeftPower);
+            backRightMotor.setPower(backRightPower);
+            }
+        }
