@@ -1,0 +1,36 @@
+package org.firstinspires.ftc.teamcode;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp(name = "SingleMotorTest")
+public class SingleMotorTest extends OpMode{
+
+    private DcMotor motor;
+
+
+
+    public void init() {
+        motor = hardwareMap.dcMotor.get("motor");
+    }
+
+    public void loop(){
+        double speed1 = 1;
+        double speed2 = 0.5;
+
+        if (gamepad1.a) {
+            motor.setPower(speed1);
+        } else if (gamepad1.b) {
+            motor.setPower(speed2);
+        }
+        else {
+            motor.setPower(0);
+        }
+    }
+}
