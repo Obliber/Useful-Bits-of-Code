@@ -1,0 +1,69 @@
+package org.firstinspires.ftc.teamcode;
+
+// Importing necessary FTC libraries
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
+
+@TeleOp(name="Arm Movement", group="Robot")
+//@Disabled
+public class ArmMovement extends LinearOpMode {
+
+    public DcMotor armMotor = null;       // Controls vertical arm motion
+    private DcMotor frontRight, backRight, frontLeft, backLeft;
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        // ************ Hardware Mapping ************
+
+
+        armMotor = hardwareMap.get(DcMotor.class, "arm");
+        frontLeft = hardwareMap.get(DcMotor.class, "front_left");
+        frontRight = hardwareMap.get(DcMotor.class, "front_right");
+        backLeft = hardwareMap.get(DcMotor.class, "back_left");
+        backRight = hardwareMap.get(DcMotor.class, "back_right");
+
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+
+        // Set braking behavior when motors receive zero power
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        waitForStart(); // Wait for the driver to press PLAY
+
+        // ******************** Main Control Loop ********************
+        while (opModeIsActive()) {
+
+            double forward = gamepad1.left_stick_y;
+            double turn = gamepad1.left_stick_x;
+            double strafe = gamepad1.right_stick_x;
+
+            // Mecanum drive calculations
+            frontLeft.setPower(Range.clip((-forward + strafe + turn), -1, 1));
+            frontRight.setPower(Range.clip((forward + strafe + turn), -1, 1));
+            backLeft.setPower(Range.clip((forward + strafe - turn), -1, 1));
+            backRight.setPower(Range.clip((-forward + strafe - turn), -1, 1));
+
+            if (gamepad1.right_bumper) {
+                // Move arm to high scoring position
+                armMotor.setPower(-1);
+            }
+
+            else if (gamepad1.left_bumper) {
+                // Move arm to pickup position
+                armMotor.setPower(1);
+            }
+
+            else {
+                armMotor.setPower(0);
+            }
+
+            }
+
+        }
+    }
+
