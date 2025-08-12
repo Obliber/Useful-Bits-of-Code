@@ -1,0 +1,51 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
+@TeleOp(name = "SingleMotorTest")
+public class SingleMotorTest extends OpMode{
+
+    private DcMotorEx motor;
+    int targetPosition = 0;
+
+
+
+    public void init() {
+        motor = hardwareMap.get(DcMotorEx.class, "motor");
+        motor.setTargetPosition(targetPosition);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(1);
+        PIDFCoefficients PIDFOriginal = motor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
+        telemetry.addData("Original PIDF", PIDFOriginal.toString());
+    }
+
+    public void loop(){
+        //double speed1 = 1;
+        //double speed2 = -1;
+
+        if (gamepad1.a) {
+            //motor.setPower(speed1);
+            targetPosition += 10;
+        } else if (gamepad1.b) {
+            //motor.setPower(speed2);
+            //targetPosition -= 10;
+        } else if (gamepad1.x) {
+            targetPosition = 0;
+        }
+        else {
+            //motor.setPower(0);
+        }
+
+        motor.setVelocityPIDFCoefficients(10,0,0,0);
+
+        motor.setTargetPosition(targetPosition);
+
+        telemetry.addData("Position", motor.getCurrentPosition());
+        telemetry.addData("Target", targetPosition);
+        telemetry.update();
+    }
+}
